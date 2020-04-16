@@ -18,7 +18,7 @@ class KCycle(object):
 
         return operations
 
-    def __str__(self):
+    def __repr__(self):
         string = '(' + str(self.kcycle[0])
 
         for i in range(1, self.length):
@@ -27,6 +27,17 @@ class KCycle(object):
         string += ')'
 
         return string
+
+    def __eq__(self, other):
+        if isinstance(other, KCycle):
+            if self.length == 1:
+                return other.length == 1
+
+            return self.operations == other.operations
+        else:
+            return other.length == 1 and other.kcycles[0] == self
+
+        return False
 
     def __call__(self, element):
         return self.operations.get(element, element)
@@ -54,20 +65,28 @@ class KCycle(object):
 class Permutation(object):
     def __init__(self, iterable_objects_list, serialize=True):
         if serialize:
-            self.kcycles = tuple(KCycle(iterable_object) for iterable_object in
-                                 iterable_objects_list)
+            kcycles = tuple(KCycle(iterable_object) for iterable_object in
+                            iterable_objects_list)
         else:
-            self.kcycles = iterable_objects_list
+            kcycles = iterable_objects_list
+
+        self.kcycles = tuple(KCycle(kcycle) for kcycle in simplify(kcycles))
 
         self.length = len(self.kcycles)
 
-    def __str__(self):
+    def __repr__(self):
         string = ''
 
         for kcycle in self.kcycles:
             string += str(kcycle)
 
         return string
+
+    def __eq__(self, other):
+        if isinstance(other, Permutation):
+            return self.kcycles == other.kcycles
+        else:
+            return self.length == 1 and self.kcycles[0] == other
 
     def __call__(self, element):
         return apply(self.kcycles, element)
@@ -130,7 +149,7 @@ def simplify(kcycle_objects):
 
     kcycles = []
 
-    for element in elements:
+    for element in sorted(elements):
         # se verifica si el elemento ya esta en un kcycle
         it_broke = False
         for kcycle in kcycles:
@@ -151,3 +170,7 @@ def simplify(kcycle_objects):
     kcycles = [kcycle for kcycle in kcycles if len(kcycle) > 1]
 
     return kcycles
+
+
+def get_permutation_from_string(string):
+    pass

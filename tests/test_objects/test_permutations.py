@@ -12,6 +12,12 @@ class TestKCycle(unittest.TestCase):
 
         self.assertEqual(string, '(1 2 3)')
 
+    def test_eq_method(self):
+        pass
+
+    def test_init_method(self):
+        pass
+
 
 class TestPermutation(unittest.TestCase):
     pass
