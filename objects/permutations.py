@@ -11,8 +11,8 @@ class KCycle(object):
         # Cycle is assumed to have tuple representation as above
         self.kcycle = tuple(iterable_object)
 
-        # In case only as number is given as input, it will indicate pos 1
-        #   remains the same
+        # In the case the input tuple is void of elements it will change it by
+        #  (1, 0)
         self.kcycle = tuple(self.kcycle or (1,))
 
         # Identify all the cycle elements
