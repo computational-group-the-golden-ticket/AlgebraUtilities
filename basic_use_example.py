@@ -1,4 +1,4 @@
-from objects.permutations import *
+from objects.permutation import *
 
 a = (1, 2, 3)
 b = (4, 1, 3)
