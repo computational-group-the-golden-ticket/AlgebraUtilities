@@ -157,10 +157,9 @@ class Permutation(AlgebraicObject):
         string = ''
 
         for kcycle in self.kcycles:
-            string += (' ' + str(kcycle))
+            string += str(kcycle)
 
-        # Ommit first blank value
-        return string[1:]
+        return string
 
     def __eq__(self, other):
         """
@@ -225,21 +224,17 @@ def power(permutation, p):
     if p == 0:
         return KCycle([1])
 
+    result = permutation
+
     # By definition the inverse is to the -1, so integer times the
     #  multiplication of the inverse
     if p < 0:
-        try:
-            p = abs(p)
-            result = permutation.inverse()
-        except TypeError:
-            print("The exponent must be an integer")
+        p = abs(p)
+        result = permutation.inverse()
 
     # Do integer times the permutation in question
-    try:
-        for i in range(1, p):
-            result *= permutation
-    except TypeError:
-        print("The exponent must be an integer")
+    for i in range(1, p):
+        result *= permutation
 
     return result
 
