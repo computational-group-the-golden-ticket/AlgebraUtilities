@@ -1,3 +1,10 @@
+class InitializationError(Exception):
+    """
+    Simple class to prevent not permited or gibberish initializations
+    """
+    pass
+
+
 class KCycle(object):
     """
     A K-Cycle represents the replacement of K elements, such that each element
@@ -9,10 +16,10 @@ class KCycle(object):
 
     def __init__(self, iterable_object):
         # Cycle is assumed to have tuple representation as above
-        self.kcycle = tuple(iterable_object)
+        self.setkcycle(iterable_object)
 
         # In the case the input tuple is void of elements it will change it by
-        #  (1, 0)
+        #   for default.
         self.kcycle = tuple(self.kcycle or (1,))
 
         # Identify all the cycle elements
@@ -24,6 +31,24 @@ class KCycle(object):
         # Will define opration to be made to a given element, see kcycl2dict
         #  method.
         self.operations = self.kcycle2dict(self.kcycle)
+
+    def setkcycle(self, iterable_object):
+        """
+        Set atribute kcycle in the case of not repeated elements.
+        """
+        # Check if in fact object is iterable
+        if not hasattr(iterable_object, '__iter__'):
+            message = ("The input of KCycle must be an iterable object")
+            raise InitializationError(message)
+
+        self.kcycle = tuple(iterable_object)
+
+        # Check that initialization is in fact a kcycle
+        for i in self.kcycle:
+            if(self.kcycle.count(i) > 1):
+                message = ("Check that the kcycle does not have repeated "
+                           "elements")
+                raise InitializationError(message)
 
     def kcycle2dict(self, kcycle):
         # This will say what number (key) is changed by the other in the cycle
@@ -43,10 +68,13 @@ class KCycle(object):
     def __repr__(self):
         # Value to be printed as print(KCycle object) is called, cycle to be
         #   perfomed
-        string = '(' + str(self.kcycle[0])
+
+        quote = isinstance(self.kcycle[0], str)
+        string = '(' + quote * '"' + str(self.kcycle[0]) + '"' * quote
 
         for i in range(1, self.length):
-            string += ' ' + str(self.kcycle[i])
+            quote = isinstance(self.kcycle[i], str)
+            string += ' ' + quote * '"' + str(self.kcycle[i]) + '"' * quote
 
         string += ')'
 
@@ -55,13 +83,15 @@ class KCycle(object):
     def __eq__(self, other):
         if isinstance(other, KCycle):
             # KCycle of one element is by operational definition the identity,
-            #   note nevertheless that operations dictionary will be the same.
+            #   note nevertheless that kcycles are define over a given space,
+            #   so, it must be checked taht such space is the same.
             if self.length == 1:
-                return other.length == 1
+                return other.length == 1 and \
+                    isinstance(self.kcycle[0], type(other.kcycle[0]))
 
-            # Note that operations are the one that uniquely define a Kcycle,
-            #  the tuple that represent could really be in several orders and
-            #  still define the same cycle.
+            # Note that operations (over a type of variables) are the ones that
+            #  uniquely define a Kcycle, the tuple that represent could really
+            #  be in several orders and stil define the same cycles.
             return self.operations == other.operations
 
         # A permutation is understood as list of cycles, in the case this one
@@ -83,12 +113,8 @@ class KCycle(object):
         else:
             kcycles = simplify((self, other))
 
-        # Case where simplify have lead to cycles of length 1
-        if len(kcycles) == 0:
-            return KCycle([1])
-        # Naturally, several Kcycles represent a general permutation
-        else:
-            return Permutation(kcycles)
+        # In general the result of this is a permutation
+        return Permutation(kcycles)
 
     def inverse(self):
         """
@@ -233,46 +259,49 @@ def simplify(kcycle_objects):
     """
     Given a tuple of Kcycle objects, this function will simplify them to the
       minimum number of kcycle procceses.
+    input
+        kcycle_objects: iterable over kycycle objects (e.g tuple of them)
+    output:
+        kcycles: reduced version of them in a list of lists; note that it is
+          given in this way because the result in general is a permutation.
     """
 
     # Get all the elements considered in the kcycles
     elements = set({})
-
-    # Get the kcyle attribute in the class and do an union
     for kcycle in kcycle_objects:
         elements = elements.union(kcycle.elements)
 
     # List to save the kcycles that will repesent the permutation
     kcycles = []
-
-    ######
-    # Move through each element, and when this one is not already in the
-    #   Kcycles constructed apply the operations defined for the interchange
+    # Move through each element, and when this one is not already in one of the
+    #   kcycle in kcycles add resultant kcycle departing from the element in
+    #   question (the result must be close off course; see while below).
     for element in sorted(elements):
-        # Verify it element is already in a Kcycle
-        it_broke = False
+        it_element_broke = False
+        # Verify if element is already in one of the kcycles constructed; in
+        #  case it is true break iteration over actual element.
         for kcycle in kcycles:
             if element in kcycle:
-                # Set true to jump over next element in the element for
-                it_broke = True
+                # Set true to jump to next element
+                it_element_broke = True
                 break
-
-        # If true, it will mean the kycycle for such an element is included
-        if it_broke:
+        # True indicate already included as was explained.
+        if it_element_broke:
             continue
 
+        # Generate kcycle departing from element not yet in kcycles.
         kcycles.append([element])
 
         # The Kcycle for the element in consideration is constructed, while the
         #   Kcycle does not close again with the first element apply process.
         while apply(kcycle_objects, kcycles[-1][-1]) != kcycles[-1][0]:
             kcycles[-1].append(apply(kcycle_objects, kcycles[-1][-1]))
-    ####
 
     # Kcycles of len==1 are eliminated
     kcycles = [kcycle for kcycle in kcycles if len(kcycle) > 1]
 
-    return kcycles
+    # List of kcycles of simplification of a single reduntant one
+    return kcycles if len(kcycles) > 0 else [[1, ]]
 
 
 def get_permutation_from_string(string):
