@@ -1,4 +1,7 @@
-class KCycle(object):
+from .baseobjects import *
+
+
+class KCycle(AlgebraicObject):
     """
     A K-Cycle represents the replacement of K elements, such that each element
       that replaces another also gets replaced. One possible representation:
@@ -86,6 +89,8 @@ class KCycle(object):
         # Case where simplify have lead to cycles of length 1
         if len(kcycles) == 0:
             return KCycle([1])
+        elif len(kcycles) == 1:
+            return KCycle(kcycles[0])
         # Naturally, several Kcycles represent a general permutation
         else:
             return Permutation(kcycles)
@@ -107,7 +112,7 @@ class KCycle(object):
         return power(self, p)
 
 
-class Permutation(object):
+class Permutation(AlgebraicObject):
     def __init__(self, iterable_objects_list, serialize=True):
         # In case the input is not an iterable of Kcyle initializations.
         if serialize:

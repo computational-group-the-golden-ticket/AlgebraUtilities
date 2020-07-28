@@ -1,14 +1,43 @@
+from ..objects.baseobjects import *
+
+
 class SemiGroup(object):
     def __init__(self, generators, name='G'):
+        # nombre del semigrupo
         self.name = name
+
+        # todos los generadores deben heredar de SemiAlgebraicObject o de
+        # AlgebraicObject
+        for generator in generators:
+            if not isinstance(generator, SemiAlgebraicObject) and \
+                    not isinstance(generator, AlgebraicObject):
+                raise TypeError('No se asegura definicion de operaciones basicas')
+
+        # lista de los generadores del semigrupo, esta podria coincidir con la
+        # lista de todos los elementos del semigrupo
         self.generators = generators
 
-        self.elements = []
+        # TODO: discutir si se guardan los elementos en un "list" o en un "set"
+        self.elements = self.generate_elements(generators)
 
-    def __str__(self):
+        # un semigrupo es un conjunto con una operacion binaria que ademas es
+        # asociativa
+        if not self.check_associativity():
+            raise TypeError('No es asociativo')
+
+        # cache for the string representation of the set of elements
+        self.string = ''
+        # si en algun momento se agrego un nuevo elemento al conjunto, se debe
+        # actualizar la variable self.string
+        self.it_changed = True
+
+    def build_the_string(self):
+        # En el caso de que se imprima el semigrupo sin haber generado todos
+        # los elementos, se muestra en pantalla a los generadores
         elements = self.elements or self.generators
-        string = '{' + str(elements[0])
 
+        # Se muestran los elementos usando la notacion de conjunto
+        string = '{' + str(elements[0])
         for element in elements[1:]:
             string += ', ' + str(element)
 
@@ -16,50 +45,76 @@ class SemiGroup(object):
 
         return string
 
-    def get_element_order(self, element):
-        result = element
-        order = 1
+    def __repr__(self):
+        # en caso de que se haya agregado un nuevo elemento, se debe
+        # reconstruir el string
+        if self.it_changed:
+            self.string = self.build_the_string()
+            self.it_changed = False
 
-        while True:
-            result *= element
+        return self.string
 
-            if result == element:
-                return order
+    def iterate_element(self, generators, new_element):
+        # en este caso se ha iterado sobre el primer generador
+        if len(generators) == 0:
+            return [new_element]
 
-            order += 1
+        # en caso de que hayan elementos en generators, se deben hacer todas
+        # las posibles multiplicaciones a derecha y a izquierda
+        new_generators = []
+        for generator in generators:
+            right_multiplication = generator * new_element
+            left_multiplication = new_element * generator
 
-    def generate_elements(self):
-        # se itera sobre los generadores
-        for generator in self.generators:
-            if not (generator in self.elements):
-                # se realizan todas las posibles operaciones con los elementos
-                # en el conjunto, si se encuentra un elemento que no esta
-                # se agrega
-                order = self.get_element_order(generator)
+            new_generators.append(generator)
+            new_generators.append(new_element)
 
-                for i in range(order + 1):
-                    candidate = generator ** i
+            if not (right_multiplication in new_generators):
+                new_generators.append(right_multiplication)
 
-                    for element in self.elements.copy():
-                        product_1 = candidate * element
-                        product_2 = element * candidate
+            if not (left_multiplication in new_generators):
+                new_generators.append(left_multiplication)
 
-                        if not(product_1 in self.elements):
-                            self.elements.append(product_1)
+        return new_generators
 
-                        if not(product_2 in self.elements):
-                            self.elements.append(product_2)
+    def add_element(self, *elements):
+        """
+        Este metodo agrega un elemento al semigrupo
+        """
+        generators = self.elements
 
-                    if not(candidate in self.elements):
-                        self.elements.append(candidate)
+        for element in elements:
+            generators = self.iterate_element(generators, element)
 
-    def get_table(self):
-        elements = self.elements or self.generators
+        self.elements = generators[:]
+        self.it_changed = True
 
-        for right in elements:
-            for left in elements:
-                print(str(right) + ' * ' + str(left) + ' = ' +
-                      str(right * left))
+    def generate_elements(self, generators):
+        elements = generators[:]
 
-    def get_classes(self):
+        # TODO: se debe revisar que en la lista no hayan generadores repetidos
+        for fixed_element in generators:
+            for element in generators:
+                right_multiplication = element * fixed_element
+                left_multiplication = fixed_element * element
+
+            if not (right_multiplication in elements):
+                elements.append(right_multiplication)
+
+            if not (left_multiplication in elements):
+                elements.append(left_multiplication)
+
+        return elements
+
+    def check_associativity(self):
+        # TODO: buscar un algoritmo de orden menor a n^3
+        for a in self.elements:
+            for b in self.elements:
+                for c in self.elements:
+                    if a * (b * c) != (a * b) * c:
+                        return False
+
+        return True
+
+    def get_cayley_table(self):
         pass
