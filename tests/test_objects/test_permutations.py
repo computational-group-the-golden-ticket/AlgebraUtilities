@@ -1,6 +1,8 @@
 import unittest
 from objects.permutations import Permutation  # yet to be used
 
+
+class TestPermutation(unittest.TestCase):
     @unittest.skip("skipping")
     def test_repr_method_iterable_objects_strings(self):
         iterable_objects = [('banana', 'fresa'), ('guayaba', 'uva', 'limon')]
