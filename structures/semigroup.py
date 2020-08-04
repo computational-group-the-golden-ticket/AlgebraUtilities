@@ -54,20 +54,19 @@ class SemiGroup(object):
 
         return self.string
 
-    def iterate_element(self, generators, new_element):
+    def update_generators(self, generators, new_element):
         # en este caso se ha iterado sobre el primer generador
         if len(generators) == 0:
             return [new_element]
 
         # en caso de que hayan elementos en generators, se deben hacer todas
         # las posibles multiplicaciones a derecha y a izquierda
-        new_generators = []
+        new_generators = [new_element]
         for generator in generators:
             right_multiplication = generator * new_element
             left_multiplication = new_element * generator
 
             new_generators.append(generator)
-            new_generators.append(new_element)
 
             if not (right_multiplication in new_generators):
                 new_generators.append(right_multiplication)
@@ -84,25 +83,17 @@ class SemiGroup(object):
         generators = self.elements
 
         for element in elements:
-            generators = self.iterate_element(generators, element)
+            generators = self.update_generators(generators, element)
 
         self.elements = generators[:]
         self.it_changed = True
 
     def generate_elements(self, generators):
-        elements = generators[:]
+        elements = []
 
         # TODO: se debe revisar que en la lista no hayan generadores repetidos
         for fixed_element in generators:
-            for element in generators:
-                right_multiplication = element * fixed_element
-                left_multiplication = fixed_element * element
-
-            if not (right_multiplication in elements):
-                elements.append(right_multiplication)
-
-            if not (left_multiplication in elements):
-                elements.append(left_multiplication)
+            elements = self.update_generators(elements, fixed_element)
 
         return elements
 
