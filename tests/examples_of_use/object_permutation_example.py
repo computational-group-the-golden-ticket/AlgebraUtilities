@@ -1,9 +1,12 @@
 from __init__ import*
 from objects.permutations import*
 
-# a = (1, 2, 3, 2, 1)
-# a = KCycle(a)
-# print(a)
+Permutation(((1,),))
+
+a = (1, 2, 3)
+a = KCycle(a)
+print(a)
+print(a(1))
 
 # a = (1, 1)
 # a = KCycle(a)
