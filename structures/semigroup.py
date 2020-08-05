@@ -11,7 +11,7 @@ class SemiGroup(object):
         for generator in generators:
             if not isinstance(generator, SemiAlgebraicObject) and \
                     not isinstance(generator, AlgebraicObject):
-                raise TypeError('No se asegura definicion de operaciones basicas')
+                raise TypeError('Definir el error')
 
         # lista de los generadores del semigrupo, esta podria coincidir con la
         # lista de todos los elementos del semigrupo
@@ -54,48 +54,66 @@ class SemiGroup(object):
 
         return self.string
 
-    def update_generators(self, generators, new_element):
-        # en este caso se ha iterado sobre el primer generador
-        if len(generators) == 0:
-            return [new_element]
+    def __len__(self):
+        return len(self.elements)
 
-        # en caso de que hayan elementos en generators, se deben hacer todas
-        # las posibles multiplicaciones a derecha y a izquierda
-        new_generators = [new_element]
-        for generator in generators:
-            right_multiplication = generator * new_element
-            left_multiplication = new_element * generator
+    def generate_orbit(self, element):
+        orbit = []
 
-            new_generators.append(generator)
+        dummy = element
+        while dummy not in orbit:
+            orbit.append(dummy)
 
-            if not (right_multiplication in new_generators):
-                new_generators.append(right_multiplication)
+            dummy *= element
 
-            if not (left_multiplication in new_generators):
-                new_generators.append(left_multiplication)
+        return orbit
 
-        return new_generators
-
-    def add_element(self, *elements):
-        """
-        Este metodo agrega un elemento al semigrupo
-        """
-        generators = self.elements
+    def remove_repeating_elements(self, elements):
+        dummy = []
 
         for element in elements:
-            generators = self.update_generators(generators, element)
+            if element not in dummy:
+                dummy.append(element)
 
-        self.elements = generators[:]
-        self.it_changed = True
+        return dummy
+
+    def all_posible_multiplication(self, elements):
+        old_length = -1
+        current_length = len(elements)
+
+        while old_length != current_length:
+            for i in range(current_length):
+                for j in range(current_length):
+                    left_multiplication = elements[i] * elements[j]
+                    right_multiplication = elements[j] * elements[i]
+
+                    if left_multiplication not in elements:
+                        elements.append(left_multiplication)
+
+                    if right_multiplication not in elements:
+                        elements.append(right_multiplication)
+
+            current_length, old_length = current_length, len(elements)
+
+        return elements
 
     def generate_elements(self, generators):
         elements = []
 
-        # TODO: se debe revisar que en la lista no hayan generadores repetidos
-        for fixed_element in generators:
-            elements = self.update_generators(elements, fixed_element)
+        # se generan las orbitas de cada generador
+        for generator in generators:
+            elements.extend(self.generate_orbit(generator))
+
+        elements = self.remove_repeating_elements(elements)
+        elements = self.all_posible_multiplication(elements)
 
         return elements
+
+    def add_element(self, element):
+        if element not in self.elements:
+            self.elements.append(element)
+
+            self.elements = self.all_posible_multiplication(self.elements)
 
     def check_associativity(self):
         # TODO: buscar un algoritmo de orden menor a n^3
@@ -108,4 +126,9 @@ class SemiGroup(object):
         return True
 
     def get_cayley_table(self):
-        pass
+        length = len(self)
+
+        for i in range(length):
+            for j in range(length):
+                c = self.elements[i] * self.elements[j]
+                print('%s * %s = %s' % (self.elements[i], self.elements[j], c))

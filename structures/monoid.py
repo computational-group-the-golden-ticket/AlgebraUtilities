@@ -15,7 +15,7 @@ class Monoid(SemiGroup):
             if self.check_identity(element):
                 return element
 
-        raise TypeError('No hay elemento identidad')
+        raise TypeError('Definir error')
 
     def check_identity(self, candidate):
         """

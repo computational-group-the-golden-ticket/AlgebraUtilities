@@ -6,7 +6,7 @@ class Group(Monoid):
         super(Group, Monoid).__init__(args, kwargs)
 
         if not self.check_inverses():
-            raise TypeError('Hay elementos sin inverso')
+            raise TypeError('Definir error')
 
     def check_inverses(self):
         for element in self.elements:
