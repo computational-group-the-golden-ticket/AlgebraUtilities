@@ -21,8 +21,8 @@ class KCycle(AlgebraicObject):
         # Cycle is assumed to have tuple representation as above
         self.setkcycle(iterable_object)
 
-        # In the case the input tuple is void of elements it will change it by
-        #   for default.
+        # In the case the input tuple is void of elements it will change by
+        #   default (e.g. [] or (1,)).
         self.kcycle = tuple(self.kcycle or (1,))
 
         # Identify all the cycle elements
@@ -87,7 +87,7 @@ class KCycle(AlgebraicObject):
         if isinstance(other, KCycle):
             # KCycle of one element is by operational definition the identity,
             #   note nevertheless that kcycles are define over a given space,
-            #   so, it must be checked taht such space is the same.
+            #   so, it must be checked that such space is the same.
             if self.length == 1:
                 return other.length == 1 and \
                     isinstance(self.kcycle[0], type(other.kcycle[0]))
@@ -100,12 +100,14 @@ class KCycle(AlgebraicObject):
         # A permutation is understood as list of cycles, in the case this one
         #  is of lenght 1 this will be an equivalent condition
         else:
-            return other.length == 1 and other.kcycles[0] == self
+            return other.length == 1 and \
+                other.kcycles[0].operations == self.operations
 
         return False
 
     def __call__(self, element):
-        # This will return to what value was the input element was changed
+        # This will return to what value was the input element changed, when
+        #   the key in question is not found we recover thes same element.
         return self.operations.get(element, element)
 
     def __mul__(self, other):
@@ -163,7 +165,7 @@ class Permutation(AlgebraicObject):
 
     def __eq__(self, other):
         """
-        For equivalence to have sense, input must be Permitation instances, or
+        For equivalence to have sense, input must be Permutation instances, or
           one given by Kcycle instance; other cases will give false by
           notation.
         """
@@ -178,7 +180,7 @@ class Permutation(AlgebraicObject):
         """
         This will return to what value was the input element was changed
         """
-        return apply(self.kcycles, element)
+        return(self.kcycles, element)
 
     def __mul__(self, other):
         # Add only a Kcycle element in case other is Kcycle type, in the other
@@ -262,6 +264,15 @@ def simplify(kcycle_objects):
     output:
         kcycles: reduced version of them in a list of lists; note that it is
           given in this way because the result in general is a permutation.
+
+    This is basically done in the following steps:
+    1. Identify all the elements ans sort them.
+    2. Construct kcycles iteration over each element.
+        2.1 Naturally if an elemen is allready in the kcycle of other, it will
+          not be repeated.
+    3. Finally all kcycles of len == 1 are eliminated for short notation.
+    4. The most simple expresssion is given; this can be an itarative object or
+      an iteration of iterations.
     """
 
     # Get all the elements considered in the kcycles
@@ -295,11 +306,15 @@ def simplify(kcycle_objects):
         while apply(kcycle_objects, kcycles[-1][-1]) != kcycles[-1][0]:
             kcycles[-1].append(apply(kcycle_objects, kcycles[-1][-1]))
 
-    # Kcycles of len==1 are eliminated
+    # Kcycles of len==1 are eliminated, therefore note that identity is the
+    #  void element.
     kcycles = [kcycle for kcycle in kcycles if len(kcycle) > 1]
 
-    # List of kcycles of simplification of a single reduntant one
-    return kcycles if len(kcycles) > 0 else [[1, ]]
+    # three results: void==identity, a kcycle, or a permutation
+    if (len(kcycles) == 0):
+        return kcycles
+
+    return kcycles if len(kcycles) > 1 else kcycles[0]
 
 
 def get_permutation_from_string(string):
