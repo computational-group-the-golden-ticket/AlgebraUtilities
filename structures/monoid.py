@@ -1,4 +1,4 @@
-from semigroup import SemiGroup
+from .semigroup import SemiGroup
 
 
 class Monoid(SemiGroup):
@@ -15,7 +15,7 @@ class Monoid(SemiGroup):
             if self.check_identity(element):
                 return element
 
-        raise TypeError('Definir error')
+        raise TypeError('Not identity')
 
     def check_identity(self, candidate):
         """

@@ -1,8 +1,11 @@
 from ..objects.baseobjects import *
+from .baseobjects import Printable
 
 
-class SemiGroup(object):
+class SemiGroup(Printable):
     def __init__(self, generators, name='G'):
+        super(SemiGroup, self).__init__()
+
         # nombre del semigrupo
         self.name = name
 
@@ -11,7 +14,7 @@ class SemiGroup(object):
         for generator in generators:
             if not isinstance(generator, SemiAlgebraicObject) and \
                     not isinstance(generator, AlgebraicObject):
-                raise TypeError('Definir el error')
+                raise TypeError('Invalid Type')
 
         # lista de los generadores del semigrupo, esta podria coincidir con la
         # lista de todos los elementos del semigrupo
@@ -27,32 +30,6 @@ class SemiGroup(object):
 
         # cache for the string representation of the set of elements
         self.string = ''
-        # si en algun momento se agrego un nuevo elemento al conjunto, se debe
-        # actualizar la variable self.string
-        self.it_changed = True
-
-    def build_the_string(self):
-        # En el caso de que se imprima el semigrupo sin haber generado todos
-        # los elementos, se muestra en pantalla a los generadores
-        elements = self.elements or self.generators
-
-        # Se muestran los elementos usando la notacion de conjunto
-        string = '{' + str(elements[0])
-        for element in elements[1:]:
-            string += ', ' + str(element)
-
-        string += '}'
-
-        return string
-
-    def __repr__(self):
-        # en caso de que se haya agregado un nuevo elemento, se debe
-        # reconstruir el string
-        if self.it_changed:
-            self.string = self.build_the_string()
-            self.it_changed = False
-
-        return self.string
 
     def __len__(self):
         return len(self.elements)
@@ -125,10 +102,14 @@ class SemiGroup(object):
 
         return True
 
-    def get_cayley_table(self):
-        length = len(self)
+    def get_cayley_table(self, a=None, b=None):
+        if a is None:
+            a = self.elements
 
-        for i in range(length):
-            for j in range(length):
-                c = self.elements[i] * self.elements[j]
-                print('%s * %s = %s' % (self.elements[i], self.elements[j], c))
+        if b is None:
+            b = self.elements
+
+        for i in range(len(a)):
+            for j in range(len(b)):
+                c = a[i] * b[j]
+                print('%s * %s = %s' % (a[i], b[j], c))

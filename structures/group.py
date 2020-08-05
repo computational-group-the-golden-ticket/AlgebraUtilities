@@ -1,15 +1,21 @@
-from monoid import Monoid
+from ..objects.baseobjects import AlgebraicObject
+from .monoid import Monoid
 
 
 class Group(Monoid):
     def __init__(self, *args, **kwargs):
-        super(Group, Monoid).__init__(args, kwargs)
+        super(Group, self).__init__(*args, **kwargs)
 
         if not self.check_inverses():
-            raise TypeError('Definir error')
+            raise TypeError('Not inverses')
 
     def check_inverses(self):
         for element in self.elements:
+            # chequeo de tipo
+            if not isinstance(element, AlgebraicObject):
+                return False
+
+            # chequeo conceptual
             if element * element ** -1 != self.identity:
                 return False
 
@@ -34,7 +40,7 @@ class Group(Monoid):
             if element != fixed_element:
                 new_element = element * fixed_element * element ** -1
 
-                if not (new_element in class_elements):
+                if new_element not in class_elements:
                     class_elements.append(new_element)
 
         return class_elements
@@ -46,9 +52,3 @@ class Group(Monoid):
             classes.append(self.get_class_of_element(element))
 
         return classes
-
-    def get_class_arrays(self):
-        pass
-
-    def get_class_multiplication_matrices(self):
-        pass
