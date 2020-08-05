@@ -3,6 +3,16 @@ from .baseobjects import Printable
 
 
 class SemiGroup(Printable):
+    """
+    Esta clase representa un semigrupo, un semigrupo es un conjunto no vacio
+    S con una operacion binaria multiplicacion (*): S x S -> S
+
+    Atributos
+    ---------
+    generators: lista con los elementos generadores del semigrupo
+    name: nombre del semigrupo
+    """
+
     def __init__(self, generators, name='G'):
         super(SemiGroup, self).__init__()
 
@@ -10,7 +20,7 @@ class SemiGroup(Printable):
         self.name = name
 
         # todos los generadores deben heredar de SemiAlgebraicObject o de
-        # AlgebraicObject
+        # AlgebraicObject, para asegurar la definicion de operaciones basicas
         for generator in generators:
             if not isinstance(generator, SemiAlgebraicObject) and \
                     not isinstance(generator, AlgebraicObject):
@@ -28,24 +38,30 @@ class SemiGroup(Printable):
         if not self.check_associativity():
             raise TypeError('No es asociativo')
 
-        # cache for the string representation of the set of elements
-        self.string = ''
-
     def __len__(self):
         return len(self.elements)
 
     def generate_orbit(self, element):
+        """
+        Este metodo genera (de forma iterativa) todas las potencias (bajo la
+        operacion) de un elemento dado hasta llegar a la identidad
+        """
         orbit = []
 
         dummy = element
         while dummy not in orbit:
             orbit.append(dummy)
 
+            # potencias
             dummy *= element
 
         return orbit
 
     def remove_repeating_elements(self, elements):
+        """
+        Este metodo elimina elementos repetidos en la lista pasada como
+        argumento
+        """
         dummy = []
 
         for element in elements:
@@ -55,12 +71,18 @@ class SemiGroup(Printable):
         return dummy
 
     def all_posible_multiplication(self, elements):
+        """
+        Este metodo realiza todas las posibles multiplicaciones entre los
+        elementos pasados como argumentos y aquellos que se van generando
+        """
         old_length = -1
         current_length = len(elements)
 
+        # la longitud de la lista cambia siempre que aparezcan nuevos elementos
         while old_length != current_length:
             for i in range(current_length):
                 for j in range(current_length):
+                    # no siempre el producto es conmutativo
                     left_multiplication = elements[i] * elements[j]
                     right_multiplication = elements[j] * elements[i]
 
@@ -70,23 +92,33 @@ class SemiGroup(Printable):
                     if right_multiplication not in elements:
                         elements.append(right_multiplication)
 
+            # se actualiza el valor de la longitud
             current_length, old_length = current_length, len(elements)
 
         return elements
 
     def generate_elements(self, generators):
+        """
+        Este metodo genera todos los elementos del grupo
+        """
         elements = []
 
         # se generan las orbitas de cada generador
         for generator in generators:
             elements.extend(self.generate_orbit(generator))
 
+        # se eliminan elementos repetidos y se realizan todas las posibles
+        # multiplicaciones
         elements = self.remove_repeating_elements(elements)
         elements = self.all_posible_multiplication(elements)
 
         return elements
 
     def add_element(self, element):
+        """
+        Este metodo agrega un nuevo generador al grupo y genera los nuevos
+        elementos
+        """
         if element not in self.elements:
             self.elements.append(element)
 
@@ -103,6 +135,9 @@ class SemiGroup(Printable):
         return True
 
     def get_cayley_table(self, a=None, b=None):
+        """
+        Este metodo muestra todas las posibles multiplicaciones
+        """
         if a is None:
             a = self.elements
 
