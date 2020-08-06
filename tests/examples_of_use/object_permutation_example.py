@@ -1,6 +1,8 @@
 from __init__ import*
 from objects.permutations import*
 
+Kcycle(8)
+
 Permutation(((1,),))
 
 a = (1, 2, 3)

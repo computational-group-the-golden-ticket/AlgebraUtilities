@@ -1,20 +1,6 @@
 from .baseobjects import *
 
 
-class InitializationError(Exception):
-    """
-    Simple class to prevent not permited or gibberish initializations
-    """
-    pass
-
-
-class CallFunctionError(Exception):
-    """
-    Simple class to prevent nonsensical calls
-    """
-    pass
-
-
 class KCycle(AlgebraicObject):
     """
     A K-Cycle represents the replacement of K elements, such that each element
@@ -48,17 +34,14 @@ class KCycle(AlgebraicObject):
         """
         # Check if in fact object is iterable
         if not hasattr(iterable_object, '__iter__'):
-            message = ("The input of KCycle must be an iterable object")
-            raise InitializationError(message)
+            raise KCycleIterInitError()
 
         self.kcycle = tuple(iterable_object)
 
         # Check that initialization is in fact a kcycle
         for i in self.kcycle:
             if(self.kcycle.count(i) > 1):
-                message = ("Check that the kcycle does not have repeated "
-                           "elements")
-                raise InitializationError(message)
+                raise KCycleRepeatInitError()
 
     def kcycle2dict(self, kcycle):
         # This will say what number (key) is changed by the other in the cycle
@@ -206,8 +189,7 @@ class Permutation(AlgebraicObject):
             else:
                 return kcycle.operations.get(element, element)
 
-        message = "There is not value to be returned"
-        raise CallFunctionError(message)
+        raise CallPermutationError()
 
     def __mul__(self, other):
         # Add only a Kcycle element in case other is Kcycle type, in the other
