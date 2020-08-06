@@ -1,21 +1,5 @@
-from algebra_utilities import AlgebraUtilitiesErrors
-
-
-class UnexpectedTypeError(AlgebraUtilitiesErrors):
-    pass
-
-
-class NonAssociativeSetError(AlgebraUtilitiesErrors):
-    pass
-
-
-class ElementsOverflow(AlgebraUtilitiesErrors):
-    pass
-
-
-class IdentityElementNotFoundError(AlgebraUtilitiesErrors):
-    pass
-
-
-class ElementWithoutInverse(AlgebraUtilitiesErrors):
-    pass
+from algebra_utilities.structures.baseobjects import *
+from algebra_utilities.structures.semigroup import *
+from algebra_utilities.structures.monoid import *
+from algebra_utilities.structures.group import *
+from algebra_utilities.structures.frobeniusalgebra import *

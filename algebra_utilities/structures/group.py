@@ -1,8 +1,8 @@
 from algebra_utilities.objects.baseobjects import AlgebraicObject
 from algebra_utilities.structures.monoid import Monoid
 
-from algebra_utilities.structures import UnexpectedTypeError
-from algebra_utilities.structures import ElementWithoutInverse
+from algebra_utilities.utils.errors import UnexpectedTypeError
+from algebra_utilities.utils.errors import ElementWithoutInverse
 
 
 class Group(Monoid):

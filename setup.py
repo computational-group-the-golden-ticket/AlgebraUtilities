@@ -1,8 +1,9 @@
-from distutils.core import setup
+from setuptools import find_packages, setup
+# from discutil.core import setup
 
 setup(
     name='algebra_utilities',
-    packages=['algebra_utilities'],
+    packages=find_packages(),
     version='0.1',
     license='MIT',
     description='tools to manipulate algebraic objects (semigroup, group, and monoids); permutation oriented.',

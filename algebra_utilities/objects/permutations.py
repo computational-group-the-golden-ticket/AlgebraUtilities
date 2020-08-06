@@ -1,7 +1,8 @@
-from .baseobjects import *
-from algebra_utilities.objects import KCycleIterInitError
-from algebra_utilities.objects import KCycleRepeatInitError
-from algebra_utilities.objects import CallPermutationError
+from algebra_utilities.objects.baseobjects import *
+
+from algebra_utilities.utils.errors import KCycleIterInitError
+from algebra_utilities.utils.errors import KCycleRepeatInitError
+from algebra_utilities.utils.errors import CallPermutationError
 
 
 class KCycle(AlgebraicObject):

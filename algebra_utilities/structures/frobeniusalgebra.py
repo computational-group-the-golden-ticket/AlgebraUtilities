@@ -2,7 +2,7 @@ from algebra_utilities.objects.baseobjects import AlgebraicObject
 from algebra_utilities.structures.baseobjects import *
 from algebra_utilities.structures.group import Group
 
-from algebra_utilities.structures import UnexpectedTypeError
+from algebra_utilities.utils.errors import UnexpectedTypeError
 
 
 class ClassesElements(AlgebraicClass, Printable):

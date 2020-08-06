@@ -1,9 +1,9 @@
 from algebra_utilities.objects.baseobjects import *
 from algebra_utilities.structures.baseobjects import Printable
 
-from algebra_utilities.structures import UnexpectedTypeError
-from algebra_utilities.structures import NonAssociativeSetError
-from algebra_utilities.structures import ElementsOverflow
+from algebra_utilities.utils.errors import UnexpectedTypeError
+from algebra_utilities.utils.errors import NonAssociativeSetError
+from algebra_utilities.utils.errors import ElementsOverflow
 
 
 class SemiGroup(Printable):
