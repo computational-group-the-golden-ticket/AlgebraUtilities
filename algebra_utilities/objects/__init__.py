@@ -16,18 +16,18 @@ class KCycleIterInitError(AlgebraUtilitiesErrors):
     """
     Simple class to prevent not permited or gibberish initializations
     """
-    print("The input of KCycle must be an iterable object")
+    pass
 
 
 class KCycleRepeatInitError(AlgebraUtilitiesErrors):
     """
     Simple class to prevent not permited or gibberish initializations
     """
-    print("Check that the kcycle does not have repeated elements")
+    pass
 
 
 class CallPermutationError(AlgebraUtilitiesErrors):
     """
     Simple class to prevent nonsensical calls
     """
-    print("There is not value to be returned")
+    pass
