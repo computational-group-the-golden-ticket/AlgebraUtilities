@@ -1,4 +1,7 @@
 from .baseobjects import *
+from algebra_utilities.objects import KCycleIterInitError
+from algebra_utilities.objects import KCycleRepeatInitError
+from algebra_utilities.objects import CallPermutationError
 
 
 class KCycle(AlgebraicObject):
@@ -34,14 +37,17 @@ class KCycle(AlgebraicObject):
         """
         # Check if in fact object is iterable
         if not hasattr(iterable_object, '__iter__'):
-            raise KCycleIterInitError()
+            message = "The input of KCycle must be an iterable object"
+            raise KCycleIterInitError(message)
 
         self.kcycle = tuple(iterable_object)
 
         # Check that initialization is in fact a kcycle
         for i in self.kcycle:
             if(self.kcycle.count(i) > 1):
-                raise KCycleRepeatInitError()
+                message = "Check that the kcycle does not have repeated" +\
+                    " elements"
+                raise KCycleRepeatInitError(message)
 
     def kcycle2dict(self, kcycle):
         # This will say what number (key) is changed by the other in the cycle
@@ -104,9 +110,9 @@ class KCycle(AlgebraicObject):
         # In the case that is multiplied by a Permutation, this one is first
         #   decomposed into Kcycles.
         if isinstance(other, Permutation):
-            kcycles = simplify((self, ) + other.kcycles)
+            kcycles = simplify((self, ) + other.kcycles, return_permutation=1)
         else:
-            kcycles = simplify((self, other))
+            kcycles = simplify((self, other), return_permutation=1)
 
         # In general the result of this is a permutation
         return Permutation(kcycles)
@@ -189,7 +195,8 @@ class Permutation(AlgebraicObject):
             else:
                 return kcycle.operations.get(element, element)
 
-        raise CallPermutationError()
+        message = "There is not value to be returned"
+        raise CallPermutationError(message)
 
     def __mul__(self, other):
         # Add only a Kcycle element in case other is Kcycle type, in the other
