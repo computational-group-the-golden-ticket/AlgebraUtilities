@@ -57,13 +57,13 @@ class TestKCycle(unittest.TestCase):
         self.assertEqual(calculation, expected_result)
 
         calculation = KCycle((1, 2)) * self.kcycle
-        # expected_result = Permutation(((1, 3),))
-        # self.assertEqual(calculation, expected_result)
+        expected_result = Permutation(((2, 3),))
+        self.assertEqual(calculation, expected_result)
 
-        # kcycle1 = KCycle((4, 5))
-        # calculation = self.kcycle * kcycle1
-        # expected_result = Permutation((self.kcycle.kcycle, kcycle1.kcycle))
-        # self.assertEqual(calculation, expected_result)
+        kcycle1 = KCycle((4, 5))
+        calculation = self.kcycle * kcycle1
+        expected_result = Permutation((self.kcycle.kcycle, kcycle1.kcycle))
+        self.assertEqual(calculation, expected_result)
 
     def test_init_method(self):
         self.assertEqual(self.kcycle.kcycle, tuple((1, 2, 3)))
