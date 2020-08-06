@@ -37,7 +37,7 @@ Las estructuras implementadas son semigrupos, monoides, grupos y algebras de fro
 Dada la estructura gerarquica en las definiciones de semigrupo, monoide, grupo, ... se
 opto por usar programacion orientada a objetos para el desarrollo de la libreria, de esta
 forma se definieron los siguientes objetos:
-
+    
 SemiAlgebraicObject
 AlgebraicObject
 KCycle
@@ -52,27 +52,27 @@ ClassesElements
 FrobeniusAlgebra
 
 ### Mensajes de error
-**AlgebraUtilitiesErrors**: De este error heredan todos los demas.
+   **AlgebraUtilitiesErrors**: De este error heredan todos los demas.
 
-**KCycleIterInitError**:
+   **KCycleIterInitError**:
 
-**KCycleRepeatInitError**:
+   **KCycleRepeatInitError**:
 
-**CallPermutationError**:
+   **CallPermutationError**:
 
-**UnexpectedTypeError**: Este error es lanzado cuando no se pasa los argumentos con el tipo adecuado.
+   **UnexpectedTypeError**: Este error es lanzado cuando no se pasa los argumentos con el tipo adecuado.
 
-**NonAssociativeSetError**: Este error es lanzado cuando se trata de crear una estructura asociativa
-con una operacion que no cumple la asociatividad.
+   **NonAssociativeSetError**: Este error es lanzado cuando se trata de crear una estructura asociativa
+   con una operacion que no cumple la asociatividad.
 
-**ElementsOverflow**: Este error es lanzado cuando se pasa el limite establecido para la generacion
-de nuevos elementos.
+   **ElementsOverflow**: Este error es lanzado cuando se pasa el limite establecido para la generacion
+   de nuevos elementos.
 
-**IdentityElementNotFoundError**: Este error es lanzado cuando se intenta crear una estructura con una
-operacion que no tiene elemento identidad cuando deberia tenerlo.
+   **IdentityElementNotFoundError**: Este error es lanzado cuando se intenta crear una estructura con una
+   operacion que no tiene elemento identidad cuando deberia tenerlo.
 
-**ElementWithoutInverse**: Este error es lanzado cuando se intenta crear una estructura con en donde
-algunos elementos no tienen inverso, aun cuando es necesario.
+   **ElementWithoutInverse**: Este error es lanzado cuando se intenta crear una estructura con en donde
+   algunos elementos no tienen inverso, aun cuando es necesario.
 
 ## Installation
 
