@@ -1,7 +1,13 @@
-from __init__ import*
-from objects.permutations import*
+from __init__ import *
+from algebra_utilities.objects.permutations import KCycle, Permutation,\
+    simplify
 
-Kcycle(8)
+# KCycle(8)
+# KCycle((8, 8))
+
+a = Permutation([[1, 2], [3, 4]])
+print(a(4))
+# print(a(7))
 
 Permutation(((1,),))
 
