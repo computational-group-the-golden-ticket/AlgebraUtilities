@@ -1,6 +1,10 @@
 from ..objects.baseobjects import *
 from .baseobjects import Printable
 
+from algebra_utilities import UnexpectedTypeError
+from algebra_utilities import NonAssociativeSetError
+from algebra_utilities import ElementsOverflow
+
 
 class SemiGroup(Printable):
     """
@@ -24,7 +28,7 @@ class SemiGroup(Printable):
         for generator in generators:
             if not isinstance(generator, SemiAlgebraicObject) and \
                     not isinstance(generator, AlgebraicObject):
-                raise TypeError('Invalid Type')
+                raise UnexpectedTypeError('The objects has an invalid type in SemiGroup initialization')
 
         # lista de los generadores del semigrupo, esta podria coincidir con la
         # lista de todos los elementos del semigrupo
@@ -36,7 +40,7 @@ class SemiGroup(Printable):
         # un semigrupo es un conjunto con una operacion binaria que ademas es
         # asociativa
         if not self.check_associativity():
-            raise TypeError('No es asociativo')
+            raise NonAssociativeSetError('The operation defined is not associative')
 
     def __len__(self):
         return len(self.elements)
@@ -70,7 +74,7 @@ class SemiGroup(Printable):
 
         return dummy
 
-    def all_posible_multiplication(self, elements):
+    def all_posible_multiplication(self, elements, limit=-1):
         """
         Este metodo realiza todas las posibles multiplicaciones entre los
         elementos pasados como argumentos y aquellos que se van generando
@@ -94,6 +98,9 @@ class SemiGroup(Printable):
 
             # se actualiza el valor de la longitud
             current_length, old_length = current_length, len(elements)
+
+            if limit > 0 and current_length > limit:
+                raise ElementsOverflow('Limit of allowed elements exceeded in the generation of elements')
 
         return elements
 
@@ -119,6 +126,11 @@ class SemiGroup(Printable):
         Este metodo agrega un nuevo generador al grupo y genera los nuevos
         elementos
         """
+        # chequeo de tipo
+        if not isinstance(generator, SemiAlgebraicObject) and \
+                not isinstance(generator, AlgebraicObject):
+            raise UnexpectedTypeError('The objects has an invalid type in element aggregation')
+
         if element not in self.elements:
             self.elements.append(element)
 

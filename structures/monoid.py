@@ -1,5 +1,7 @@
 from .semigroup import SemiGroup
 
+from algebra_utilities import IdentityElementNotFoundError
+
 
 class Monoid(SemiGroup):
     """
@@ -31,7 +33,7 @@ class Monoid(SemiGroup):
             if self.check_identity(element):
                 return element
 
-        raise TypeError('Not identity')
+        raise IdentityElementNotFoundError('The identity element was not found on Monoid initialization')
 
     def check_identity(self, candidate):
         """

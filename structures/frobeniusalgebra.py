@@ -2,6 +2,8 @@ from ..objects.baseobjects import AlgebraicObject
 from .baseobjects import *
 from .group import Group
 
+from algebra_utilities import UnexpectedTypeError
+
 
 class ClassesElements(AlgebraicClass, Printable):
     def __init__(self, elements):
@@ -11,7 +13,7 @@ class ClassesElements(AlgebraicClass, Printable):
         for element in self.elements:
             # chequeo de tipo
             if not isinstance(element, AlgebraicObject):
-                raise Exception('Invalid type')
+                raise UnexpectedTypeError('The objects has an invalid type in ClassesElements initialization')
 
     def __repr__(self):
         return Printable.__repr__(self)
@@ -47,7 +49,7 @@ class FrobeniusAlgebra(Group):
             custom_class = ClassesElements
 
         if not issubclass(custom_class, AlgebraicClass):
-            raise Exception('Type error')
+            raise UnexpectedTypeError('The objects has an invalid type in FrobeniusAlgebra initialization')
 
         self.custom_class = custom_class
 

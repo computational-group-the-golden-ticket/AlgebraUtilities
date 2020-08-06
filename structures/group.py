@@ -1,6 +1,9 @@
 from ..objects.baseobjects import AlgebraicObject
 from .monoid import Monoid
 
+from algebra_utilities import UnexpectedTypeError
+from algebra_utilities import ElementWithoutInverse
+
 
 class Group(Monoid):
     """
@@ -20,7 +23,7 @@ class Group(Monoid):
 
         # en un grupo todos los elementos deben ser invertibles
         if not self.check_inverses():
-            raise TypeError('Not inverses')
+            raise ElementWithoutInverse('Element without inverse was found in Group initialization')
 
     def check_inverses(self):
         """
@@ -30,7 +33,7 @@ class Group(Monoid):
         for element in self.elements:
             # chequeo de tipo
             if not isinstance(element, AlgebraicObject):
-                return False
+                raise UnexpectedTypeError('The objects has an invalid type on Group initialization')
 
             # chequeo conceptual
             if element * element ** -1 != self.identity:
