@@ -2,7 +2,6 @@ from algebra_utilities.objects.baseobjects import *
 
 from algebra_utilities.utils.errors import KCycleIterInitError
 from algebra_utilities.utils.errors import KCycleRepeatInitError
-from algebra_utilities.utils.errors import CallPermutationError
 
 
 class KCycle(AlgebraicObject):
@@ -140,7 +139,7 @@ class Permutation(AlgebraicObject):
         # Do initialization of permutation by initializing kcycles
 
         # The input are iterables of iterables
-        if any(hasattr(elem, '__iter__') for elem in iterable_objects_list):
+        if all(hasattr(elem, '__iter__') for elem in iterable_objects_list):
             if serialize:
                 kcycles = tuple(KCycle(iterable_object) for iterable_object in
                                 iterable_objects_list)
@@ -190,14 +189,10 @@ class Permutation(AlgebraicObject):
         """
         This will return to what value was the input element was changed
         """
-        for kcycle in self.kcycles:
-            if(kcycle.operations.get(element, element) == element):
-                pass
-            else:
-                return kcycle.operations.get(element, element)
+        for kcycle in reversed(self.kcycles):
+            element = kcycle.operations.get(element, element)
 
-        message = "There is not value to be returned"
-        raise CallPermutationError(message)
+        return element
 
     def __mul__(self, other):
         # Add only a Kcycle element in case other is Kcycle type, in the other

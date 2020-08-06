@@ -18,13 +18,6 @@ class KCycleRepeatInitError(AlgebraUtilitiesErrors):
     pass
 
 
-class CallPermutationError(AlgebraUtilitiesErrors):
-    """
-    Simple class to prevent nonsensical calls
-    """
-    pass
-
-
 class UnexpectedTypeError(AlgebraUtilitiesErrors):
     pass
 
