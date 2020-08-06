@@ -9,13 +9,9 @@ setup(
     author='CG The Golden Ticket',
     author_email='cgthegoldenticket@gmail.com',
     url='https://github.com/computational-group-the-golden-ticket/AlgebraUtilities',
-    download_url='https://github.com/user/reponame/archive/v_01.tar.gz',    # I explain this later on
+    download_url='https://github.com/computational-group-the-golden-ticket/AlgebraUtilities/archive/0.1.tar.gz',    # I explain this later on
     keywords=['Algebra', 'Objects', 'Structures', 'Monoid', 'Group',
               'Semigroup', 'Permutation'],
-
-    install_requires=[            # I get to this in a second
-        'unittest',
-    ],
 
     classifiers=[
         'Development Status :: 3 - Alpha',

@@ -1,8 +1,8 @@
-from ..objects.baseobjects import AlgebraicObject
-from .monoid import Monoid
+from algebra_utilities.objects.baseobjects import AlgebraicObject
+from algebra_utilities.structures.monoid import Monoid
 
-from algebra_utilities import UnexpectedTypeError
-from algebra_utilities import ElementWithoutInverse
+from algebra_utilities.structures import UnexpectedTypeError
+from algebra_utilities.structures import ElementWithoutInverse
 
 
 class Group(Monoid):
@@ -62,6 +62,7 @@ class Group(Monoid):
         """
         class_elements = [fixed_element]
 
+        # TODO: this can be optimized
         for element in self.elements:
             if element != fixed_element:
                 # se realiza la operacion de conjugacion para obtener todos
@@ -80,6 +81,14 @@ class Group(Monoid):
         classes = []
 
         for element in self.elements:
-            classes.append(self.get_class_of_element(element))
+            in_some_class = False
+
+            for class_i in classes:
+                if element in class_i:
+                    in_some_class = True
+                    break
+
+            if not in_some_class:
+                classes.append(self.get_class_of_element(element))
 
         return classes

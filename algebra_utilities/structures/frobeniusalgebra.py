@@ -1,8 +1,8 @@
-from ..objects.baseobjects import AlgebraicObject
-from .baseobjects import *
-from .group import Group
+from algebra_utilities.objects.baseobjects import AlgebraicObject
+from algebra_utilities.structures.baseobjects import *
+from algebra_utilities.structures.group import Group
 
-from algebra_utilities import UnexpectedTypeError
+from algebra_utilities.structures import UnexpectedTypeError
 
 
 class ClassesElements(AlgebraicClass, Printable):
@@ -59,8 +59,16 @@ class FrobeniusAlgebra(Group):
 
         for element in self.elements:
             if element != self.identity:
-                class_element = self.get_class_of_element(element)
-                self.classes.append(self.custom_class(class_element))
+                in_some_class = False
+
+                for class_i in self.classes:
+                    if element in class_i.elements:
+                        in_some_class = True
+                        break
+
+                if not in_some_class:
+                    class_element = self.get_class_of_element(element)
+                    self.classes.append(self.custom_class(class_element))
 
     def show_classes_order(self):
         for i in range(len(self.classes)):
@@ -68,6 +76,9 @@ class FrobeniusAlgebra(Group):
 
     def rearrange_classes_order(self, new_order):
         self.classes = [self.classes[i - 1] for i in new_order]
+
+    def get_class_arrays(self, i, j):
+        return self.class_element[i - 1].elements[j - 1]
 
     def get_class_coefficients(self, i, j, k=None):
         result = self.classes[i - 1] * self.classes[j - 1]
@@ -82,9 +93,6 @@ class FrobeniusAlgebra(Group):
             coef.append(result.elements.count(class_k.elements[0]))
 
         return coef
-
-    def get_class_arrays(self, i, j):
-        return self.class_element[i - 1].elements[j - 1]
 
     def get_class_multiplication_matrices(self):
         length = len(self.classes)

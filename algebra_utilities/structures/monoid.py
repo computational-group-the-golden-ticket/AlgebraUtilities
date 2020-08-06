@@ -1,6 +1,5 @@
-from .semigroup import SemiGroup
-
-from algebra_utilities import IdentityElementNotFoundError
+from algebra_utilities.structures.semigroup import SemiGroup
+from algebra_utilities.structures import IdentityElementNotFoundError
 
 
 class Monoid(SemiGroup):

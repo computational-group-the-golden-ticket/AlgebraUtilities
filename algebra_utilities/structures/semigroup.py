@@ -1,15 +1,16 @@
-from ..objects.baseobjects import *
-from .baseobjects import Printable
+from algebra_utilities.objects.baseobjects import *
+from algebra_utilities.structures.baseobjects import Printable
 
-from algebra_utilities import UnexpectedTypeError
-from algebra_utilities import NonAssociativeSetError
-from algebra_utilities import ElementsOverflow
+from algebra_utilities.structures import UnexpectedTypeError
+from algebra_utilities.structures import NonAssociativeSetError
+from algebra_utilities.structures import ElementsOverflow
 
 
 class SemiGroup(Printable):
     """
     Esta clase representa un semigrupo, un semigrupo es un conjunto no vacio
-    S con una operacion binaria multiplicacion (*): S x S -> S
+    S con una operacion binaria multiplicacion (*): S x S -> S que es
+    asociativa
 
     Atributos
     ---------
@@ -52,12 +53,12 @@ class SemiGroup(Printable):
         """
         orbit = []
 
-        dummy = element
-        while dummy not in orbit:
-            orbit.append(dummy)
+        pow_element = element
+        while pow_element not in orbit:
+            orbit.append(pow_element)
 
             # potencias
-            dummy *= element
+            pow_element *= element
 
         return orbit
 
@@ -84,6 +85,7 @@ class SemiGroup(Printable):
 
         # la longitud de la lista cambia siempre que aparezcan nuevos elementos
         while old_length != current_length:
+            # TODO: this is a bottle and must be reimplemented
             for i in range(current_length):
                 for j in range(current_length):
                     # no siempre el producto es conmutativo
@@ -97,7 +99,7 @@ class SemiGroup(Printable):
                         elements.append(right_multiplication)
 
             # se actualiza el valor de la longitud
-            current_length, old_length = current_length, len(elements)
+            current_length, old_length = len(elements), current_length
 
             if limit > 0 and current_length > limit:
                 raise ElementsOverflow('Limit of allowed elements exceeded in the generation of elements')
@@ -132,8 +134,7 @@ class SemiGroup(Printable):
             raise UnexpectedTypeError('The objects has an invalid type in element aggregation')
 
         if element not in self.elements:
-            self.elements.append(element)
-
+            self.elements.extend(self.generate_orbit(element))
             self.elements = self.all_posible_multiplication(self.elements)
 
     def check_associativity(self):
