@@ -8,6 +8,13 @@ class InitializationError(Exception):
     pass
 
 
+class CallFunctionError(Exception):
+    """
+    Simple class to prevent nonsensical calls
+    """
+    pass
+
+
 class KCycle(AlgebraicObject):
     """
     A K-Cycle represents the replacement of K elements, such that each element
@@ -140,15 +147,28 @@ class KCycle(AlgebraicObject):
 
 class Permutation(AlgebraicObject):
     def __init__(self, iterable_objects_list, serialize=True):
-        # In case the input is not an iterable of Kcyle initializations.
-        if serialize:
-            kcycles = tuple(KCycle(iterable_object) for iterable_object in
-                            iterable_objects_list)
-        else:
-            kcycles = iterable_objects_list
-
         # Do initialization of permutation by initializing kcycles
-        self.kcycles = tuple(KCycle(kcycle) for kcycle in simplify(kcycles))
+
+        # The input are iterables of iterables
+        if any(hasattr(elem, '__iter__') for elem in iterable_objects_list):
+            if serialize:
+                kcycles = tuple(KCycle(iterable_object) for iterable_object in
+                                iterable_objects_list)
+            else:
+                kcycles = iterable_objects_list
+
+            # Simplify value
+            self.kcycles = tuple(KCycle(kcycle) for kcycle in
+                                 simplify(kcycles, return_permutation=1))
+
+        # In case the input is not an iterable of iterables, two cases: kcycles
+        #   well defined in each element o simply iter of iter.
+        elif hasattr(iterable_objects_list, '__iter__'):
+            if all(isinstance(elem, KCycle) for elem in
+                   iterable_objects_list):
+                self.kcycles = iterable_objects_list
+            else:
+                self.kcycles = (KCycle(iterable_objects_list),)
 
         # minimum number of kcycles that represent the permutation
         self.length = len(self.kcycles)
@@ -180,21 +200,30 @@ class Permutation(AlgebraicObject):
         """
         This will return to what value was the input element was changed
         """
-        return(self.kcycles, element)
+        for kcycle in self.kcycles:
+            if(kcycle.operations.get(element, element) == element):
+                pass
+            else:
+                return kcycle.operations.get(element, element)
+
+        message = "There is not value to be returned"
+        raise CallFunctionError(message)
 
     def __mul__(self, other):
         # Add only a Kcycle element in case other is Kcycle type, in the other
         #  case add the complete list.
         if isinstance(other, KCycle):
-            kcycles = simplify(self.kcycles + (other, ))
+            kcycles = simplify(self.kcycles + (other, ),
+                               return_permutation=1)
         else:
-            kcycles = simplify(self.kcycles + other.kcycles)
+            kcycles = simplify(self.kcycles + other.kcycles,
+                               return_permutation=1)
 
         # Case where simplify have lead to cycles of length 1
         if len(kcycles) == 0:
             return KCycle([1])
         else:
-            return Permutation(kcycles, serialize=False)
+            return Permutation(kcycles)
 
     def inverse(self):
         """
@@ -255,7 +284,7 @@ def apply(kcycles, element):
     return result
 
 
-def simplify(kcycle_objects):
+def simplify(kcycle_objects, return_permutation=False):
     """
     Given a tuple of Kcycle objects, this function will simplify them to the
       minimum number of kcycle procceses.
@@ -310,6 +339,14 @@ def simplify(kcycle_objects):
     #  void element.
     kcycles = [kcycle for kcycle in kcycles if len(kcycle) > 1]
 
+    # case of permutation
+    if(return_permutation):
+        if(len(kcycles) == 0):
+            return ((1,),)
+        else:
+            return kcycles
+
+    # normal case of simplification
     # three results: void==identity, a kcycle, or a permutation
     if (len(kcycles) == 0):
         return kcycles
