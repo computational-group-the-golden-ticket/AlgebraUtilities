@@ -1,5 +1,5 @@
 import unittest
-from objects.permutations import KCycle, Permutation
+from algebra_utilities.objects.permutations import KCycle, Permutation
 
 
 class TestKCycle(unittest.TestCase):

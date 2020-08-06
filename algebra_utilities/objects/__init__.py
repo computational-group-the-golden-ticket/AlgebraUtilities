@@ -1,4 +1,4 @@
-# from algebra_utilities import AlgebraUtilitiesErrors
+from algebra_utilities import AlgebraUtilitiesErrors
 
 
 class GroupElement(object):
@@ -12,22 +12,22 @@ class GroupElement(object):
         return GroupElement()
 
 
-# class KCycleIterInitError(AlgebraUtilitiesErrors):
-#     """
-#     Simple class to prevent not permited or gibberish initializations
-#     """
-#     print("The input of KCycle must be an iterable object")
+class KCycleIterInitError(AlgebraUtilitiesErrors):
+    """
+    Simple class to prevent not permited or gibberish initializations
+    """
+    pass
 
 
-# class KCycleRepeatInitError(AlgebraUtilitiesErrors):
-#     """
-#     Simple class to prevent not permited or gibberish initializations
-#     """
-#     print("Check that the kcycle does not have repeated elements")
+class KCycleRepeatInitError(AlgebraUtilitiesErrors):
+    """
+    Simple class to prevent not permited or gibberish initializations
+    """
+    pass
 
 
-# class CallPermutationError(AlgebraUtilitiesErrors):
-#     """
-#     Simple class to prevent nonsensical calls
-#     """
-#     print("There is not value to be returned")
+class CallPermutationError(AlgebraUtilitiesErrors):
+    """
+    Simple class to prevent nonsensical calls
+    """
+    pass
