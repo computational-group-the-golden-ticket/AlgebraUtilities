@@ -1,4 +1,4 @@
-from "Tensorial-Properties-of-Matter" import AlgebraUtilitiesErrors
+from algebra_utilities import AlgebraUtilitiesErrors
 
 
 class GroupElement(object):
