@@ -1,23 +1,22 @@
 # Algebra Utilities
+In this repository algebraic tools are implemented, which facilitate the study
+of the tensor properties of matter.
 
-En este repositorio se implementan herramientas algebraicas, que facilitan el estudio
-de las propiedades tensoriales de la materia.
+The implemented structures are semigroups, monoids, groups and frobenius algebras
+(more will be added in future updates).
 
-Las estructuras implementadas son semigrupos, monoides, grupos y algebras de frobenius
-(en proximas actualizaciones se iran agregaran mas).
+### Semigroup:
+     A semigroup is an ordered pair (S, *), where S is a nonempty set and * is a
+     binary operation *:S x S --> S such that the binary operation * is associative.
 
-### Semigrupo:
-    Un semigrupo es un par ordenado (S, *), donde S es un cojunto no vacio y * es una
-    operacion binaria *:S x S --> S tal que la operacion binaria * es asociativa.
+### Monoid:
+     A monoid is a semigroup (M, *) in which a neutral element exists under the
+     binary operation *, that is, there is 'e' in M such that e * a = a * e = a for all
+     element a in M.
 
-### Monoide:
-    Un monoide es un semigrupo (M, *) en el que existe un elemento neutro bajo la
-    operacion binaria *, esto es, existe 'e' en M tal que e * a = a * e = a para todo
-    elemento a en M.
-
-### Grupo:
-    Un grupo es un Monoide (G, *) en el que para todo elemento g en G, existe un elemento
-    a en G tal que a * g = g * a = e, y se denota a = g^-1.
+### Group:
+     A group is a Monoid (G, *) in which for every element g in G, there exists an element
+     a in G such that a * g = g * a = e, and is denoted a = g^-1.
 
 ## Documentation
 
@@ -34,9 +33,9 @@ Las estructuras implementadas son semigrupos, monoides, grupos y algebras de fro
           given in this way because the result in general is a permutation.
 
 ### Objetos
-Dada la estructura gerarquica en las definiciones de semigrupo, monoide, grupo, ... se
-opto por usar programacion orientada a objetos para el desarrollo de la libreria, de esta
-forma se definieron los siguientes objetos:
+Given the hierarchical structure in the definitions of semigroup, monoid, group, ...
+opted to use object-oriented programming for the development of the library, so
+way the following objects were defined:
     
 SemiAlgebraicObject
 AlgebraicObject
